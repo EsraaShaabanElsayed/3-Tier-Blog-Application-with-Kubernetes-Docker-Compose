@@ -278,8 +278,8 @@ kubectl get all
 **Get Node IP:**
 ```bash
 kubectl get nodes -o wide
-/home/esraa/Pictures/Screenshots/Screenshot from 2025-10-25 23-55-12.png
 ```
+
 
 **Test via HTTPS:**
 ```bash
