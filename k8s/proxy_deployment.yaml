@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment  # ← Changed from Pod!
+metadata:
+  name: proxy
+  labels:
+    app: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proxy
+  template:
+    metadata:
+      labels:
+        app: proxy
+    spec:
+      containers:
+      - name: nginx
+        image: blog-app-nginx:latest  # ← Your custom image!
+        imagePullPolicy: IfNotPresent  # For local Minikube
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https

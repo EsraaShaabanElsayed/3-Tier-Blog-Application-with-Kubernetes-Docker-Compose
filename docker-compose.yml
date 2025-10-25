@@ -1,0 +1,62 @@
+secrets:
+  db-password:
+    file: ./db_password.txt
+
+services:
+
+  backend:
+    container_name: backend-service
+    build: ./backend
+    ports:
+      - "9080:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    secrets:
+      - db-password
+    networks:
+      - app-network
+    restart: unless-stopped 
+    
+
+  db:
+    container_name: example
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-password
+      MYSQL_DATABASE: example
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    secrets:
+      - db-password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+    restart: unless-stopped  
+      
+  nginx:
+    container_name: nginx-service
+    build: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+
+    networks:
+      - app-network
+    restart: unless-stopped  
+
+networks:
+  app-network:
+
+volumes:
+  db-data: 
+

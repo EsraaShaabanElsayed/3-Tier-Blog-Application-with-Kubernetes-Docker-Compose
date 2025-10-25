@@ -1,0 +1,5 @@
+nginx/certs/
+   *.key
+   *.crt
+k8s/db-secret.yaml
+db_password.txt

@@ -1,0 +1,12 @@
+# backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  type: ClusterIP
+  selector:
+    app: go-app  
+  ports:
+  - port: 8000
+    targetPort: 8000
