@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment  # ← Changed from Pod!
+kind: Deployment # ← Changed from Pod!
 metadata:
   name: proxy
   labels:
@@ -15,11 +15,24 @@ spec:
         app: proxy
     spec:
       containers:
-      - name: nginx
-        image: blog-app-nginx:latest  # ← Your custom image!
-        imagePullPolicy: IfNotPresent  # For local Minikube
-        ports:
-        - containerPort: 80
-          name: http
-        - containerPort: 443
-          name: https
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          volumeMounts:
+            - name: nginx-config-volume
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: nginx.conf
+            - name: tls-secret-volume
+              mountPath: /etc/nginx/ssl
+              readOnly: true
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config
+        - name: tls-secret-volume
+          secret:
+            secretName: tls-secret
