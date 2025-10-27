@@ -287,7 +287,22 @@ curl -k https://<NODE-IP>:30443
 ```
 ![alt text](<Screenshot from 2025-10-25 23-57-34.png>)
 
+---
+🧭 Deployment Variants
 
+This project provides two Kubernetes deployment approaches, organized by branches:
+
+Branch	Description
+main	Uses Nginx as a reverse proxy exposed via NodePort services for HTTPS access.
+ingress	Uses a Kubernetes Ingress Controller for routing and SSL/TLS termination.
+
+💡 You can switch branches to explore both:
+```bash
+git checkout main      # Nginx (NodePort) setup
+git checkout ingress   # Ingress Controller setup
+```
+
+The Docker Compose setup remains the same for local development in both branches.
 ---
 
 ## Accessing the Application
@@ -307,4 +322,3 @@ curl -k https://<NODE-IP>:30443
 |---------|-----|-------------|
 | **Nginx (HTTPS)** | `https://<NODE-IP>:30443` | NodePort access |
 | **Nginx (HTTP)** | `http://<NODE-IP>:30080` | Redirects to HTTPS |
-
