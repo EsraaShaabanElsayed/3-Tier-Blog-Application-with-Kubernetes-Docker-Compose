@@ -17,15 +17,14 @@ spec:
           image: blog-app-backend
           imagePullPolicy: IfNotPresent
           ports:
-          - containerPort: 8000
-          
+            - containerPort: 8000
+
           volumeMounts:
             - name: secret-volume
-              mountPath: /run/secrets/db-password  # ← Mount ONLY the file!
-              subPath: db-password                  # ← Key from the secret
+              mountPath: /run/secrets/db-password # ← Mount ONLY the file!
+              subPath: db-password # ← Key from the secret
               readOnly: true
       volumes:
-      - name: secret-volume
-        secret:
-          secretName: db-secret
-      
+        - name: secret-volume
+          secret:
+            secretName: db-secret
