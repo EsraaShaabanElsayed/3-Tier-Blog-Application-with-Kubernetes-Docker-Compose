@@ -3,3 +3,4 @@ nginx/certs/
    *.crt
 k8s/db-secret.yaml
 db_password.txt
+k8s/nginx-certs.yaml
