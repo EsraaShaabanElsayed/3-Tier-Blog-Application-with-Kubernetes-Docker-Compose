@@ -14,7 +14,7 @@ spec:
       labels:
         app: proxy
     spec:
-      serviceAccountName: blog-app-sa
+      
       securityContext:
         allowPrivilegeEscalation: false
         runAsNonRoot: true
