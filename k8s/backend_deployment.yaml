@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: go-app-container
-          image: blog-app-backend
+          image: esraa114/blog-app-backend
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000

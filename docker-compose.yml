@@ -3,10 +3,10 @@ secrets:
     file: ./db_password.txt
 
 services:
-
   backend:
     container_name: backend-service
-    build: ./backend
+    image: esraa114/blog-app-backend
+    # build: ./backend
     ports:
       - "9080:8000"
     depends_on:
@@ -16,8 +16,7 @@ services:
       - db-password
     networks:
       - app-network
-    restart: unless-stopped 
-    
+    restart: unless-stopped
 
   db:
     container_name: example
@@ -39,11 +38,12 @@ services:
       - db-data:/var/lib/mysql
     networks:
       - app-network
-    restart: unless-stopped  
-      
+    restart: unless-stopped
+
   nginx:
     container_name: nginx-service
-    build: ./nginx
+    image: esraa114/blog-app-nginx
+    # build: ./nginx
     ports:
       - "80:80"
       - "443:443"
@@ -52,11 +52,10 @@ services:
 
     networks:
       - app-network
-    restart: unless-stopped  
+    restart: unless-stopped
 
 networks:
   app-network:
 
 volumes:
-  db-data: 
-
+  db-data:
