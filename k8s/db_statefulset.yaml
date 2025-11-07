@@ -22,9 +22,6 @@ spec:
         volumeMounts:
         - name: mysql-data
           mountPath: /var/lib/mysql
-       
-
-
         env:
         - name: MYSQL_DATABASE
           value: example
