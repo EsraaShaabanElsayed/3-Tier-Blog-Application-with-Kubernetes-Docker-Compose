@@ -16,7 +16,7 @@ spec:
       serviceAccountName: blog-app-sa
       securityContext:
         runAsNonRoot: true
-        fsGroup: 999
+        fsGroup: 1000730000
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -27,7 +27,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 999
+            runAsUser: 1000730000
             capabilities:
               drop:
                 - ALL
