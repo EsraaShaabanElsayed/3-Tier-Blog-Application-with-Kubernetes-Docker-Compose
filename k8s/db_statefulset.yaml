@@ -13,29 +13,50 @@ spec:
       labels:
         app: mysql
     spec:
+      serviceAccountName: blog-app-sa
+      # securityContext:
+      #   runAsNonRoot: true
+      #   fsGroup: 999
       containers:
-      - name: mysql-container
-        image: mysql:8.0
-        ports:
-        - containerPort: 3306
+        - name: mysql-container
+          image: mysql:8.0
+          ports:
+          - containerPort: 3306
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   runAsNonRoot: true
+          #   runAsUser: 999
+          #   capabilities:
+          #     drop:
+          #       - ALL
 
-        volumeMounts:
-        - name: mysql-data
-          mountPath: /var/lib/mysql
-        env:
-        - name: MYSQL_DATABASE
-          value: example
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: db-password
-
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+          env:
+            - name: MYSQL_DATABASE
+              value: example
+            - name: MYSQL_USER
+              value: appuser
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-password
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 500m
 
       volumes:
-            
-        
         - name: mysql-data
           persistentVolumeClaim:
             claimName: mysql-pvc
-

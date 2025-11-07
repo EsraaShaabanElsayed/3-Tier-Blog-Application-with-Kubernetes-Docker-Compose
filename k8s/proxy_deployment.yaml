@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment # ← Changed from Pod!
+kind: Deployment
 metadata:
   name: proxy
   labels:
