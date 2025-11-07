@@ -21,7 +21,7 @@ spec:
         - name: mysql-container
           image: mysql:8.0
           ports:
-          - containerPort: 3306
+            - containerPort: 3306
           # securityContext:
           #   allowPrivilegeEscalation: false
           #   runAsNonRoot: true
@@ -48,6 +48,21 @@ spec:
                 secretKeyRef:
                   name: db-secret
                   key: db-password
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          readinessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 45
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
           resources:
             requests:
               memory: 256Mi
