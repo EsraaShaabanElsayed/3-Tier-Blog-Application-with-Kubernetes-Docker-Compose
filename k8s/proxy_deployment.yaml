@@ -17,16 +17,15 @@ spec:
       serviceAccountName: blog-app-sa
       securityContext:
         runAsNonRoot: true
-        fsGroup: 1000740000
+        fsGroup: 1000730001
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: nginx
           image: nginx:1.25-alpine
           securityContext:
-            runAsUser: 101 # nginx user ID in the container
-            runAsGroup: 101 # nginx group ID
-            allowPrivilegeEscalation: false
+            runAsUser: 1000730001
+            runAsGroup: 1000730001
             capabilities:
               drop:
                 - ALL
