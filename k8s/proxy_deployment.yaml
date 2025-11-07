@@ -14,7 +14,6 @@ spec:
       labels:
         app: proxy
     spec:
-      
       securityContext:
         allowPrivilegeEscalation: false
         runAsNonRoot: true
@@ -35,9 +34,9 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
-            - containerPort: 443
+            - containerPort: 8443
               name: https
           volumeMounts:
             - name: nginx-config-volume
@@ -45,7 +44,7 @@ spec:
             - name: tls-secret-volume
               mountPath: /etc/nginx/ssl
               readOnly: true
-            - name: nginx-cache  # Added: for nginx temp files
+            - name: nginx-cache # Added: for nginx temp files
               mountPath: /var/cache/nginx
           resources:
             requests:
@@ -61,5 +60,5 @@ spec:
         - name: tls-secret-volume
           secret:
             secretName: tls-secret
-        - name: nginx-cache  # Added: emptyDir for cache
+        - name: nginx-cache # Added: emptyDir for cache
           emptyDir: {}

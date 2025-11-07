@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: blog-app
+spec:
+  to:
+    kind: Service
+    name: proxy
+  port:
+    targetPort: http
+  tls:
+    termination: edge          # OpenShift handles TLS
+    insecureEdgeTerminationPolicy: Redirect  # HTTP -> HTTPS redirect

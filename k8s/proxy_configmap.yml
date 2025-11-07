@@ -5,13 +5,13 @@ metadata:
 data:
   nginx.conf: |
     server {
-        listen 80;
+        listen 8080;
         server_name www.blog-app.com blog-app.com;
         return 301 https://$host$request_uri;
     }
 
     server {
-        listen 443 ssl;
+        listen 8443 ssl;
         server_name www.blog-app.com blog-app.com;
 
         ssl_certificate /etc/nginx/ssl/tls.crt;
