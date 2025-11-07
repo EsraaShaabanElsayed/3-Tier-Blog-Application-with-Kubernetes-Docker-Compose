@@ -17,7 +17,7 @@ spec:
       securityContext:
         allowPrivilegeEscalation: false
         runAsNonRoot: true
-        fsGroup: 1000730001
+        # fsGroup: 1000730001
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -26,8 +26,8 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000730001
-            runAsGroup: 1000730001
+            # runAsUser: 1000730001
+            # runAsGroup: 1000730001
             capabilities:
               drop:
                 - ALL
