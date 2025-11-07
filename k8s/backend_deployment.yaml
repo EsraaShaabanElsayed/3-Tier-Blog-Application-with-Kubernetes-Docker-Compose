@@ -12,6 +12,7 @@ spec:
       labels:
         app: go-app
     spec:
+      serviceAccountName: blog-app-sa
       containers:
         - name: go-app-container
           image: esraa114/blog-app-backend
