@@ -14,21 +14,21 @@ spec:
         app: mysql
     spec:
       serviceAccountName: blog-app-sa
-      # securityContext:
-      #   runAsNonRoot: true
-      #   fsGroup: 999
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 999
       containers:
         - name: mysql-container
           image: mysql:8.0
           ports:
             - containerPort: 3306
-          # securityContext:
-          #   allowPrivilegeEscalation: false
-          #   runAsNonRoot: true
-          #   runAsUser: 999
-          #   capabilities:
-          #     drop:
-          #       - ALL
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 999
+            capabilities:
+              drop:
+                - ALL
 
           volumeMounts:
             - name: mysql-data
