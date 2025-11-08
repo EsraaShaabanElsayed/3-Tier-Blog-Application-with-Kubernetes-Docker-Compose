@@ -1,0 +1,150 @@
+# Blog Application - OpenShift Deployment
+
+A three-tier blog application deployed on OpenShift with Nginx reverse proxy, Go backend, and MySQL database.
+
+## 🏗️ Architecture
+
+```
+┌─────────────┐
+│   Internet  │
+└──────┬──────┘
+       │
+       ↓ NodePort (30080/30443)
+┌─────────────────────────────────┐
+│  Nginx Reverse Proxy            │
+│  - HTTP → HTTPS redirect        │
+│  - TLS termination              │
+│  - Port 8080 (HTTP)             │
+│  - Port 8443 (HTTPS)            │
+└────────┬────────────────────────┘
+         │
+         ↓ Port 8000
+┌─────────────────────────────────┐
+│  Go Backend API                 │
+│  - REST API                     │
+│  - Business logic               │
+└────────┬────────────────────────┘
+         │
+         ↓ Port 3306
+┌─────────────────────────────────┐
+│  MySQL Database                 │
+│  - StatefulSet with PVC         │
+│  - Persistent storage           │
+└─────────────────────────────────┘
+```
+
+## 📋 Components
+
+### 1. **Nginx Proxy** (Deployment)
+- **Image:** `nginx:1.25-alpine`
+- **Ports:** 
+  - 8080 (HTTP - redirects to HTTPS)
+  - 8443 (HTTPS with TLS)
+- **Service Type:** NodePort (30080, 30443)
+- **Features:**
+  - Automatic HTTP to HTTPS redirect
+  - TLS/SSL termination
+  - Reverse proxy to backend
+  - Custom configuration via ConfigMap
+
+### 2. **Backend API** (Deployment)
+- **Image:** `esraa114/blog-app-backend`
+- **Port:** 8000
+- **Service Type:** ClusterIP
+- **Features:**
+  - Go-based REST API
+  - Secret management for database credentials
+  - ServiceAccount integration
+
+### 3. **MySQL Database** (StatefulSet)
+- **Image:** `mysql:8.0`
+- **Port:** 3306
+- **Service Type:** Headless ClusterIP
+- **Storage:** PersistentVolumeClaim (`mysql-pvc`)
+- **Features:**
+  - Stateful deployment for data persistence
+  - Security hardened (non-root, dropped capabilities)
+  - Health probes (liveness and readiness)
+  - Resource limits defined
+
+## 🔐 Security Features
+
+- **ServiceAccount:** Custom service account (`blog-app-sa`) for pod identity
+- **Secrets Management:** 
+  - Database passwords stored in `db-secret`
+  - TLS certificates in `tls-secret`
+- **Security Context:**
+  - Non-root containers
+  - Dropped all capabilities
+  - Seccomp profile enforcement
+  - Read-only root filesystem where applicable
+
+## 🚀 Deployment
+
+### Prerequisites
+- OpenShift cluster (CRC or full cluster)
+- `oc` CLI tool installed
+- Database secret created
+- TLS certificate secret created
+- PersistentVolumeClaim for MySQL
+### Steps
+3. **Deploy Components:**
+```bash
+# ServiceAccount
+oc apply -f service-account.yaml
+
+# Database
+oc apply -f db-statefulset.yaml
+oc apply -f db-service.yaml
+
+# Backend
+oc apply -f app-deployment.yaml
+oc apply -f backend-service.yaml
+
+# Proxy
+oc apply -f nginx-configmap.yaml
+oc apply -f proxy-deployment.yaml
+oc apply -f proxy-service.yaml
+```
+
+4. **Verify Deployment:**
+```bash
+oc get all
+oc get pvc
+oc get secrets
+```
+![Secrets](images/Screenshot from 2025-11-08 16-01-07.png)
+## 🌐 Accessing the Application
+
+### Via NodePort (External Access)
+- **HTTP:** `http://<node-ip>:30080` (redirects to HTTPS)
+![HTTP](images/Screenshot from 2025-11-08 16-00-21.png)
+- **HTTPS:** `https://<node-ip>:30443`
+![HTTPS](images/Screenshot from 2025-11-08 16-00-35.png)
+
+
+### Get Node IP (CRC):
+```bash
+crc ip
+```
+
+### Example:
+```bash
+# HTTP (will redirect)
+curl http://192.168.130.11:30080
+
+# HTTPS
+curl -k https://192.168.130.11:30443
+```
+
+(images/Screenshot from 2025-11-08 16-11-07.png)
+
+## 📊 Port Mapping
+
+| Component | Container Port | Service Port | NodePort | Protocol |
+|-----------|---------------|--------------|----------|----------|
+| Nginx     | 8080          | 80           | 30080    | HTTP     |
+| Nginx     | 8443          | 443          | 30443    | HTTPS    |
+| Backend   | 8000          | 8000         | -        | HTTP     |
+| MySQL     | 3306          | 3306         | -        | TCP      |
+
