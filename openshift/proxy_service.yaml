@@ -7,13 +7,15 @@ metadata:
 spec:
   selector:
     app: proxy
+  type: NodePort
   ports:
     - name: http
-      port: 8080
+      nodePort: 30080
+      port: 80
       targetPort: 8080
       protocol: TCP
     - name: https
-      port: 8443
+      nodePort: 30443
+      port: 443
       targetPort: 8443
       protocol: TCP
-  type: ClusterIP
