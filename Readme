@@ -87,19 +87,21 @@ A three-tier blog application deployed on OpenShift with Nginx reverse proxy, Go
 - Database secret created
 - TLS certificate secret created
 - PersistentVolumeClaim for MySQL
-### Steps
-3. **Deploy Components:**
+
+### Quick Start
+
+1. **Deploy Components (in order):**
 ```bash
 # ServiceAccount
 oc apply -f service-account.yaml
 
 # Database
-oc apply -f db-statefulset.yaml
 oc apply -f db-service.yaml
+oc apply -f db-statefulset.yaml
 
 # Backend
-oc apply -f app-deployment.yaml
 oc apply -f backend-service.yaml
+oc apply -f app-deployment.yaml
 
 # Proxy
 oc apply -f nginx-configmap.yaml
@@ -107,21 +109,18 @@ oc apply -f proxy-deployment.yaml
 oc apply -f proxy-service.yaml
 ```
 
-4. **Verify Deployment:**
+2. **Verify Deployment:**
 ```bash
 oc get all
 oc get pvc
 oc get secrets
 ```
-![Secrets](images/Screenshot from 2025-11-08 16-01-07.png)
+
 ## 🌐 Accessing the Application
 
 ### Via NodePort (External Access)
 - **HTTP:** `http://<node-ip>:30080` (redirects to HTTPS)
-![HTTP](images/Screenshot from 2025-11-08 16-00-21.png)
 - **HTTPS:** `https://<node-ip>:30443`
-![HTTPS](images/Screenshot from 2025-11-08 16-00-35.png)
-
 
 ### Get Node IP (CRC):
 ```bash
@@ -130,14 +129,27 @@ crc ip
 
 ### Example:
 ```bash
-# HTTP (will redirect)
+# HTTP (will redirect with 301)
 curl http://192.168.130.11:30080
 
-# HTTPS
+# HTTPS (returns blog posts)
 curl -k https://192.168.130.11:30443
 ```
 
-(images/Screenshot from 2025-11-08 16-11-07.png)
+### Expected Output:
+```bash
+# HTTP response (301 redirect)
+<html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>nginx/1.25.5</center>
+</body>
+</html>
+
+# HTTPS response (blog data)
+["Blog post #0","Blog post #1","Blog post #2","Blog post #3","Blog post #4"]
+```
 
 ## 📊 Port Mapping
 
@@ -148,3 +160,43 @@ curl -k https://192.168.130.11:30443
 | Backend   | 8000          | 8000         | -        | HTTP     |
 | MySQL     | 3306          | 3306         | -        | TCP      |
 
+## 🔍 Troubleshooting
+
+### Check Pod Status
+```bash
+oc get pods
+oc logs <pod-name>
+oc describe pod <pod-name>
+```
+
+### Check Service Endpoints
+```bash
+oc get endpoints
+oc describe svc <service-name>
+```
+
+### Port Forward for Testing
+```bash
+# Test backend directly
+oc port-forward svc/backend 8000:8000
+curl http://localhost:8000
+
+# Test proxy
+oc port-forward svc/proxy 8080:8080
+curl http://localhost:8080
+```
+
+
+## 📝 Configuration Files
+
+```
+openshift/
+├── service-account.yaml        # ServiceAccount for pods
+├── db-service.yaml             # MySQL headless service
+├── db-statefulset.yaml         # MySQL StatefulSet
+├── backend-service.yaml        # Backend ClusterIP service
+├── app-deployment.yaml         # Backend deployment
+├── nginx-configmap.yaml        # Nginx configuration
+├── proxy-deployment.yaml       # Nginx deployment
+└── proxy-service.yaml          # Nginx NodePort service
+```
