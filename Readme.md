@@ -1,4 +1,4 @@
- Blog Application - OpenShift Deployment
+Blog Application - OpenShift Deployment
 
 A three-tier blog application deployed on OpenShift with Nginx reverse proxy, Go backend, and MySQL database.
 
