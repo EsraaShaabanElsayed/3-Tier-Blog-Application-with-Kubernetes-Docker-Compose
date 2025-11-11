@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment # ← Changed from Pod!
+kind: Deployment
 metadata:
   name: proxy
   labels:
     app: proxy
+  namespace: blog-app
 spec:
   replicas: 1
   selector:

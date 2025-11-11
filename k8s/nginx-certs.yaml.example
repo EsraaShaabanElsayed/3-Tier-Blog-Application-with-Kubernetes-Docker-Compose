@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: tls-secret
+  namespace: blog-app
 type: kubernetes.io/tls
 data:
   tls.crt: 

@@ -4,6 +4,7 @@ metadata:
   name: proxy-service
   labels:
     app: proxy
+  namespace: blog-app
 spec:
   type: NodePort  
   selector:
@@ -13,9 +14,9 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
-    nodePort: 30080  
+    nodePort: 30081  
   - name: https
     protocol: TCP
     port: 443
     targetPort: 443
-    nodePort: 30443
+    nodePort: 30444
